@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ESP32 Web BLE App</title>
+    <title>Web MACETA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -17,36 +17,39 @@
 </head>
 <body>
     <div class="topnav">
-        <h1>ESP32 Web BLE Application</h1>
+        <h1>Control de Maceta</h1>
     </div>
     <div class="content">
         <div class="card-grid">
             <div class="card">
                 <p>
-                    <button id="connectBleButton" class="connectButton"> Connect to BLE Device</button>
-                    <button id="disconnectBleButton" class="disconnectButton"> Disconnect BLE Device</button>
+                    <button id="connectBleButton" class="connectButton"> Conectar Maceta</button>
+                    <button id="disconnectBleButton" class="disconnectButton"> Desconectar Maceta</button>
                 </p>
-                <p class="gray-label">BLE state: <strong><span id="bleState" style="color:#d13a30;">Disconnected</span></strong></p>
+                <p class="gray-label">Estado: <strong><span id="bleState" style="color:#d13a30;">Desconectado</span></strong></p>
             </div>
         </div>
         <div class="card-grid">
             <div class="card">
-                <h2>Fetched Value</h2>
+                <h2>Humedad</h2>
                 <p class="reading"><span id="valueContainer">NaN</span></p>
-                <p class="gray-label">Last reading: <span id="timestamp"></span></p>
+                <p class="gray-label">Ultima lectura: <span id="timestamp"></span></p>
             </div>
 
             <div class="card">
-                <h2>Control GPIO 2</h2>
-                <button id="onButton" class="onButton">ON</button>
-                <button id="offButton" class="offButton">OFF</button>
-                <p class="gray-label">Last value sent: <span id="valueSent"></span></p>
+                <h2>Bomba de Agua</h2>
+                <button id="onButton" class="onButton">ENC</button>
+                <button id="offButton" class="offButton">APA</button>
+                <p class="gray-label">Ultimo valor: <span id="valueSent"></span></p>
             </div>
         </div>
     </div>
     <div class="footer">
-        <p><a href="https://randomnerdtutorials.com/">Created by RandomNerdTutorials.com</a></p>
-        <p><a href="https://RandomNerdTutorials.com/esp32-web-bluetooth/">Read the full project here.</a></p>
+		<p><a>Creado por RMC</a></p>
+		<!--
+        //<p><a href="https://randomnerdtutorials.com/">Creado por RMC</a></p>
+        //<p><a href="https://RandomNerdTutorials.com/esp32-web-bluetooth/">Read the full project he</a></p>
+		-->
     </div>
 </body>
 <script>
@@ -61,7 +64,7 @@
     const timestampContainer = document.getElementById('timestamp');
 
     //Define BLE Device Specs
-    var deviceName ='ESP32';
+    var deviceName ='ESP32_MACETA';
     var bleService = '19b10000-e8f2-537e-4f6c-d104768a1214';
     var ledCharacteristic = '19b10002-e8f2-537e-4f6c-d104768a1214';
     var sensorCharacteristic= '19b10001-e8f2-537e-4f6c-d104768a1214';
@@ -89,10 +92,10 @@
     function isWebBluetoothEnabled() {
         if (!navigator.bluetooth) {
             console.log('Web Bluetooth API is not available in this browser!');
-            bleStateContainer.innerHTML = "Web Bluetooth API is not available in this browser/device!";
+            bleStateContainer.innerHTML = "Web Bluetooth API no disponible en browser";
             return false
         }
-        console.log('Web Bluetooth API supported in this browser.');
+        console.log('Web Bluetooth API soportado en el browser.');
         return true
     }
 
@@ -105,7 +108,7 @@
         })
         .then(device => {
             console.log('Device Selected:', device.name);
-            bleStateContainer.innerHTML = 'Connected to device ' + device.name;
+            bleStateContainer.innerHTML = 'Conectado con ' + device.name;
             bleStateContainer.style.color = "#24af37";
             device.addEventListener('gattservicedisconnected', onDisconnected);
             return device.gatt.connect();
@@ -141,7 +144,7 @@
 
     function onDisconnected(event){
         console.log('Device Disconnected:', event.target.device.name);
-        bleStateContainer.innerHTML = "Device disconnected";
+        bleStateContainer.innerHTML = "Desconectado";
         bleStateContainer.style.color = "#d13a30";
 
         connectToDevice();
@@ -186,7 +189,7 @@
                     })
                     .then(() => {
                         console.log("Device Disconnected");
-                        bleStateContainer.innerHTML = "Device Disconnected";
+                        bleStateContainer.innerHTML = "Desconectado";
                         bleStateContainer.style.color = "#d13a30";
 
                     })
@@ -199,7 +202,7 @@
         } else {
             // Throw an error if Bluetooth is not connected
             console.error("Bluetooth is not connected.");
-            window.alert("Bluetooth is not connected.")
+            window.alert("Bluetooth no conectado.")
         }
     }
 
